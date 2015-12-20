@@ -1,7 +1,13 @@
-#!/usr/bin/coffee
 watch = require 'watch'
 jade = require 'jade'
 fs = require 'fs'
+
+if process.argv.length < 3
+  console.log """Usage:
+    $ jade2js path/to/templates path/to/result.js
+
+    """
+  return 1
 
 files = []
 compile = (buffer = []) ->
@@ -19,6 +25,7 @@ watch.watchTree process.argv[2], (tree, curr, prev) ->
   for f,stat of tree
     files.push f if /\.jade$/.test f
   watch.unwatchTree process.argv[2]
+  console.log "Watching #{files.length} files"
 
 watch.createMonitor process.argv[2], (monitor) ->
   for event in ['created', 'changed', 'removed']

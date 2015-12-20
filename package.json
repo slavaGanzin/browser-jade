@@ -1,19 +1,16 @@
 {
-  "name": "browser-jade",
+  "name": "jade2js",
   "version": "0.0.2",
   "description": "Compile jade into js functions served as one file",
-  "main": "index.coffee",
   "bin": {
-    "browser-jade": "index.coffee"
+    "jade2js": "jade2js.js"
   },
   "author": "Slava Ganzin",
   "license": "ISC",
   "dependencies": {
     "jade": "^1.11.0",
     "watch": "^0.17.1",
-  },
-  "repository": "git@github.com:slavaGanzin/browser-jade.git",
-  "devDependencies": {
     "coffee-script": "^1.10.0"
-  }
+  },
+  "repository": "git@github.com:slavaGanzin/browser-jade.git"
 }
