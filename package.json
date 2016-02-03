@@ -1,6 +1,6 @@
 {
   "name": "jade2js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Compile jade into js functions served as one file",
   "bin": {
     "jade2js": "jade2js.js"
