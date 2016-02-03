@@ -11,11 +11,13 @@ if process.argv.length < 3
 
 files = []
 compile = (buffer = []) ->
-  buffer.push 'jade = {}'
+  buffer.push fs.readFileSync('node_modules/jade/runtime.js').toString()
+  buffer.push '//##########################################templates###########'
+  buffer.push 'render={}'
   for f in files
     #TODO: collapses, proper function names
     name = f.replace(process.argv[2],'').replace(/^\//,'').replace(/.jade/,'').replace(/\//g,'"]["')
-    buffer.push 'jade["'+name+'"] = '+ jade.compileFileClient f
+    buffer.push 'render["'+name+'"] = '+ jade.compileFileClient f
   buffer.join('\n')
 
 write = (content) ->
@@ -26,6 +28,7 @@ watch.watchTree process.argv[2], (tree, curr, prev) ->
     files.push f if /\.jade$/.test f
   watch.unwatchTree process.argv[2]
   console.log "Watching #{files.length} files"
+  write compile()
 
 watch.createMonitor process.argv[2], (monitor) ->
   for event in ['created', 'changed', 'removed']
