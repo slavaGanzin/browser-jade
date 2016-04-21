@@ -12,3 +12,12 @@ in html:
     render.*YourTemplateFilename*(variables)
   </script>
 ```
+
+All your script tags would be cut from jade template and moved into result.js file as [IIFE](https://en.wikipedia.org/wiki/Immediately-invoked_function_expression)
+So you can use it to declare template specific code as:
+
+```
+  #myAwesomeSelector Hello World
+  script
+    - alert($('#myAwesomeSelector').val())
+```

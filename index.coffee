@@ -9,16 +9,36 @@ if process.argv.length < 3
     """
   return 1
 
+separator = (name) ->
+  "\n\n\n//#{name}   ####################################"
+  
 files = []
-compile = (buffer = []) ->
-  buffer.push fs.readFileSync('node_modules/jade/runtime.js').toString()
-  buffer.push '//##########################################templates###########'
-  buffer.push 'render={}'
+compile = (templates = [], scripts = []) ->
+  templates.push 'render={}'
   for f in files
     #TODO: collapses, proper function names
-    name = f.replace(process.argv[2],'').replace(/^\//,'').replace(/.jade/,'').replace(/\//g,'"]["')
-    buffer.push 'render["'+name+'"] = '+ jade.compileFileClient f
-  buffer.join('\n')
+    name = f.replace(process.argv[2],'')
+            .replace(/^\//,'')
+            .replace(/.jade/,'')
+            .replace(/\//g,'"]["')
+            
+    file = fs.readFileSync(f).toString()
+    file = file.replace /^script.*\n(^\s+.*\n)*/gim, (script) ->
+      jade.compileClient script, compileDebug: false
+          .replace /<script>(.*)<\/script>/gim, (withScriptTags, compiledScript)->
+            scripts.push separator(f) + '\n' + compiledScript.replace /\\n/gim, "\n"
+      ''
+    template = jade.compileClient file, compileDebug: false
+    templates.push "render['#{name}'] = #{template}"
+  
+  [
+    separator('runtime')
+    fs.readFileSync('node_modules/jade/runtime.js').toString()
+    separator('scripts')
+    scripts.join '\n'
+    separator('templates')
+    templates.join '\n'
+  ].join '\n'
 
 write = (content) ->
   fs.writeFileSync process.argv[3].replace(/(\.js)?$/,'.js') , content
