@@ -28,8 +28,13 @@ compile = (templates = [], scripts = []) ->
           .replace /<script>(.*)<\/script>/gim, (withScriptTags, compiledScript)->
             scripts.push separator(f) + '\n' + compiledScript.replace /\\n/gim, "\n"
       ''
-    template = jade.compileClient file, compileDebug: false
-    templates.push "render['#{name}'] = #{template}"
+    try
+      template = jade.compileClient file, compileDebug: false
+      templates.push "render['#{name}'] = #{template}"
+    catch e
+      console.error message = "Error while compiling file #{f}\n\n#{e}\n\n"
+      message = message.replace(/\n/gim, "\\n")
+      templates.push "console.error(\"#{message}\")"
   
   [
     separator('runtime')
