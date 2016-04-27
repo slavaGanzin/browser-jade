@@ -15,6 +15,11 @@ separator = (name) ->
 files = []
 compile = (templates = [], scripts = []) ->
   templates.push 'render={}'
+  reportError = (e) ->
+    console.error message = "Error while compiling file #{f}\n\n#{e}\n\n"
+    message = message.replace(/\n/gim, "\\n")
+    templates.push "console.error(\"#{message}\")"
+    
   for f in files
     #TODO: collapses, proper function names
     name = f.replace(process.argv[2],'')
@@ -24,18 +29,19 @@ compile = (templates = [], scripts = []) ->
             
     file = fs.readFileSync(f).toString()
     file = file.replace /^script.*\n(^\s+.*\n)*/gim, (script) ->
-      jade.compileClient script, compileDebug: false
-          .replace /<script>(.*)<\/script>/gim, (withScriptTags, compiledScript)->
-            scripts.push separator(f) + '\n' + compiledScript.replace /\\n/gim, "\n"
+      try
+        jade.compileClient script, compileDebug: false
+            .replace /<script>(.*)<\/script>/gim, (withScriptTags, compiledScript)->
+              scripts.push separator(f) + '\n' + compiledScript.replace /\\n/gim, "\n"
+      catch e
+        reportError e
+        
       ''
     try
       template = jade.compileClient file, compileDebug: false
       templates.push "render['#{name}'] = #{template}"
     catch e
-      console.error message = "Error while compiling file #{f}\n\n#{e}\n\n"
-      message = message.replace(/\n/gim, "\\n")
-      templates.push "console.error(\"#{message}\")"
-  
+      reportError e
   [
     separator('runtime')
     fs.readFileSync('node_modules/jade/runtime.js').toString()
