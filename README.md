@@ -1,7 +1,7 @@
 Compile jade into js functions served as one file
 
 ```
-  $ jade2js path/to/templates path/to/result.js
+  $ jade2js path/to/templates path/to/result.js [--no-debug]
   
 ```
 
@@ -21,3 +21,5 @@ So you can use it to declare template specific code as:
   script
     - alert($('#myAwesomeSelector').val())
 ```
+
+Jade generate a lot of debug information to help you debug your code. And it looks a bit messy, so for production use ```--no-debug``` or ```-D```
