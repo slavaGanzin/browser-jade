@@ -19,7 +19,10 @@ module.exports = (files = []) ->
           jade.compileClient script, compileDebug: false
             .replace /<script>(.*)<\/script>/gim, (_, compiledScript)->
               scripts.push separator f
-              scripts.push compiledScript.replace /\\n/gim, "\n"
+              scripts.push(compiledScript
+                .replace /\\n/gim, "\n"
+                .replace /\\\\/gim, "\\"
+              )
         catch e
           reportError e
         ''
