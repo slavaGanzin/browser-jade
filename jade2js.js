@@ -3,7 +3,7 @@ global.ARGV = require('commander')
 require('coffee-script/register')
 
 ARGV
-  .version('0.0.9')
+  .version('0.1.0')
   .usage ('path/to/templates path/to/result.js [options]')
   .option('-D, --no-debug', 'Generate files without debug hooks [production mode]')
   .action(function (path2templates, path2result, command) {
