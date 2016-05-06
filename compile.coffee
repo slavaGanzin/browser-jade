@@ -20,8 +20,8 @@ module.exports = (files = []) ->
             .replace /<script>(.*)<\/script>/gim, (_, compiledScript)->
               scripts.push separator f
               scripts.push(compiledScript
-                .replace /\\n/gim, "\n"
-                .replace /\\\\/gim, "\\"
+                .replace(/\\n/gim, "\n")
+                .replace /\\(.)/gim, "\$1"
               )
         catch e
           reportError e
