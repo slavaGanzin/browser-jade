@@ -22,4 +22,4 @@ module.exports = (files = []) ->
     for event in ['created', 'changed', 'removed']
       monitor.on event, (f) ->
         write compile files
-        console.log "#{f} changed: #{path2result} recompiled"
+        console.log "#{f} #{event}: #{path2result} recompiled"
